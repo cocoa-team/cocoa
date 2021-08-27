@@ -2,7 +2,7 @@ import fastify from 'fastify';
 import fastifyWebSocket from 'fastify-websocket';
 import WebSocket from 'ws';
 
-import { ChatData, CocoaChatType, CocoaServerToClientMessage } from '../../core';
+import { CocoaChatType, CocoaServerToClientMessage } from '../../core';
 
 import { ChatClient, CocoaServerLaunchInfo } from './types';
 import { makeCocoaChannelList, sendChatCocoaCore } from './kakao';
@@ -41,8 +41,12 @@ server.get('/chatStream/:channelId', { websocket: true }, (connection, req) => {
       connection,
     });
 
+    let internalLogId = 0;
+
     connection.socket.on('message', (message: Buffer) => {
+      internalLogId += 1;
       sendChatCocoaCore({
+        logId: internalLogId.toString(),
         channelId,
         messageTime: new Date().getTime(),
         messageText: message.toString('utf8'),
@@ -50,6 +54,7 @@ server.get('/chatStream/:channelId', { websocket: true }, (connection, req) => {
       });
 
       sendChatToCocoaClients({
+        logId: internalLogId.toString(),
         channelId,
         messageTime: new Date().getTime(),
         messageText: message.toString('utf8'),
@@ -58,7 +63,7 @@ server.get('/chatStream/:channelId', { websocket: true }, (connection, req) => {
           profileImage: '',
           userId: '###',
           name: '',
-        }
+        },
       });
     });
   }

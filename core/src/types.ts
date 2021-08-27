@@ -1,5 +1,3 @@
-export type ChannelList = Array<{ name: string, channelId: string }>;
-
 export type CocoaUser = {
   name: string,
   permission?: string[],
@@ -7,22 +5,12 @@ export type CocoaUser = {
   profileImage: string,
 };
 
-export type ChatData = {
-  channelId: string,
-  userId: string,
-  date: number,
-  profileImage: string,
-  name: string,
-  text?: string,
-  image?: string,
-  emoticon?: string,
-};
-
 export enum CocoaChatType {
   TEXT = 'text',
 }
 
 export interface CocoaChatData {
+  logId: string;
   channelId: string;
   messageTime: number;
   messageText: string;
@@ -35,4 +23,5 @@ export interface CocoaServerToClientMessage extends CocoaChatData {
 
 export type CocoaChannelInfo = {
   name: string,
+  channelId: string,
 };

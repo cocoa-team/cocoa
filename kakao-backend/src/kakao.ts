@@ -7,27 +7,30 @@ import {
   Long,
 } from 'node-kakao';
 
-import { ChannelList, CocoaChatData, CocoaChatType } from '../../core';
+import {
+  CocoaChannelInfo, CocoaChatData, CocoaChatType,
+} from '../../core';
 
 import { KakaoLaunchInfo } from './types';
 import { sendChatToCocoaClients } from './server';
 
-const messageQueue: CocoaChatData[] = []
+const messageQueue: CocoaChatData[] = [];
+
+const client = new TalkClient();
 
 setInterval(() => {
   if (messageQueue.length > 0) {
-    console.log(messageQueue);
     const chatData = messageQueue[0];
 
     const channel = client.channelList.get(Long.fromString(chatData.channelId));
 
     if (channel) {
       channel.sendChat(chatData.messageText);
-    };
+    }
 
     messageQueue.splice(0, 1);
   }
-}, 1000);
+}, 200);
 
 const sendKakaoChat = (chat: CocoaChatData): void => {
   messageQueue.push(chat);
@@ -36,8 +39,6 @@ const sendKakaoChat = (chat: CocoaChatData): void => {
 const kakaoClientMessage = (...arg: any) => {
   console.log(...arg);
 };
-
-const client = new TalkClient();
 
 function alertLoginError(name: string, error: number) {
   const errorMessage: number | string = KnownAuthStatusCode[error] ?? error;
@@ -85,6 +86,7 @@ function chatHandleCallback(data: TalkChatData, channel: TalkChannel) {
   kakaoClientMessage(new Date(), `[${roomName}]${sender.nickname}': ' ${data.text}`);
 
   sendChatToCocoaClients({
+    logId: data.chat.logId.toString(),
     channelId: channel.channelId.toString(),
     messageTime: new Date().getTime(),
     messageText: data.text,
@@ -93,12 +95,12 @@ function chatHandleCallback(data: TalkChatData, channel: TalkChannel) {
       profileImage: sender.profileURL,
       userId: sender.userId.toString(),
       name: sender.nickname,
-    }
+    },
   });
 }
 
 export const sendChatCocoaCore = (chatData: CocoaChatData) => {
-  sendKakaoChat(chatData)
+  sendKakaoChat(chatData);
 };
 
 export const startKakaoClient = (LaunchInfo: KakaoLaunchInfo) => {
@@ -115,8 +117,8 @@ export const startKakaoClient = (LaunchInfo: KakaoLaunchInfo) => {
   });
 };
 
-export const makeCocoaChannelList = (): ChannelList => {
-  const result: ChannelList = [];
+export const makeCocoaChannelList = (): CocoaChannelInfo[] => {
+  const result: CocoaChannelInfo[] = [];
 
   const t = [...client.channelList.all()];
   t.forEach((v) => {

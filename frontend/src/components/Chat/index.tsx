@@ -4,7 +4,7 @@ import { createWebSocket } from '../../util';
 import { CocoaServerToClientMessage } from '../../../../core/src/types';
 import './style.css';
 
-type ChatPageProps = {
+type ChatProps = {
   channelId: string,
   channelName: string,
 };
@@ -15,7 +15,7 @@ const ChatList = (props: {list: CocoaServerToClientMessage[]}) => {
     <>
       {
         list.map((val) => (
-          <div className="chat by-friend">
+          <div className="chat by-friend" key={val.logId}>
             <a className="profile-image-wrapper">
               <img className="profile-image" src={val.senderInfo.profileImage}/>
             </a>
@@ -34,8 +34,7 @@ const ChatList = (props: {list: CocoaServerToClientMessage[]}) => {
   );
 };
 
-const ChatPage = (props: ChatPageProps) => {
-  const { channelName, channelId } = props;
+export default ({ channelName, channelId }: ChatProps) => {
   const [textMessage, setMessage] = useState<string>('');
   const [channelSocket, setChannelSocket] = useState<WebSocket>();
   const [recivedChatList, setRecivedChatList] = useState<CocoaServerToClientMessage[]>([]);
@@ -63,7 +62,7 @@ const ChatPage = (props: ChatPageProps) => {
     }
   };
 
-  const onKeyDownEvent = ((ev: any): void => {
+  const keyPressHandle = ((ev: any): void => {
     if (ev.key === 'Enter' && !ev.shiftKey) {
       const sendText = textMessage.trim();
       if (sendText) {
@@ -85,11 +84,9 @@ const ChatPage = (props: ChatPageProps) => {
         </div>
         <textarea id="chat-input" placeholder="메세지 입력" value={textMessage} onChange={(e) => {
           setMessage(e.target.value);
-        }} onKeyDown={onKeyDownEvent}>
+        }} onKeyPress={keyPressHandle}>
         </textarea>
       </div>
     </>
   );
 };
-
-export default ChatPage;

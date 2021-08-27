@@ -1,12 +1,16 @@
-import { createWebSocket } from "../../util";
+import { Link } from 'react-router-dom';
 
+import { CocoaChannelInfo } from '../../../../core/src';
 
-const ChannelList = () => {
-  return (
-    <>
-      <textarea id="chat-input" placeholder="메세지 입력">
-      </textarea>
-    </>
-  );
-};
+const ChannelList = ({ list }: { list: CocoaChannelInfo[]}) => (
+  <>
+    {
+      list.map((v) => (
+        <Link to={`/front/chat/${v.channelId}`} key={v.channelId}>
+          <div> {v.name} </div>
+        </Link>
+      ))
+    }
+  </>
+);
 export default ChannelList;
