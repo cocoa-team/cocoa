@@ -1,0 +1,29 @@
+{
+  "name": "cocoa",
+  "version": "0.0.0",
+  "description": "cross-platform messenger library",
+  "main": "index.js",
+  "private": true,
+  "workspaces": [
+    "core",
+    "kakao-backend",
+    "frontend"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "husky install "
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cocoa-team/cocoa.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cocoa-team/cocoa/issues"
+  },
+  "homepage": "https://github.com/cocoa-team/cocoa#readme",
+  "devDependencies": {
+    "husky": "^7.0.1"
+  }
+}

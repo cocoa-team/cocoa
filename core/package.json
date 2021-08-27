@@ -1,0 +1,24 @@
+{
+  "name": "core",
+  "version": "0.0.0",
+  "description": "cocoa core",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "check-types": "tsc --noEmit --skipLibCheck",
+    "lint": "lint-staged"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.29.2",
+    "@typescript-eslint/parser": "^4.29.2",
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-import-resolver-typescript": "^2.4.0",
+    "eslint-plugin-import": "^2.24.1",
+    "husky": "^7.0.1",
+    "lint-staged": "^11.1.2",
+    "typescript": "^4.3.5"
+  }
+}
