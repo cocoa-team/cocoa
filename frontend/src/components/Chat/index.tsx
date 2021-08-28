@@ -14,21 +14,32 @@ const ChatList = (props: {list: CocoaServerToClientMessage[]}) => {
   return (
     <>
       {
-        list.map((val) => (
-          <div className="chat by-friend" key={val.logId}>
-            <a className="profile-image-wrapper">
-              <img className="profile-image" src={val.senderInfo.profileImage}/>
-            </a>
-            <p className="user-name">
-              {val.senderInfo.name}
-            </p>
-            <div className="inline-chat-list">
-              <p className="chat-body">
-                {val.messageText}
+        list.map((val) => {
+          let chatBy = 'by-me';
+          let userInfo = <></>;
+          if (val.senderInfo.userId !== '###') {
+            chatBy = 'by-friend';
+            userInfo = <>
+              <a className="profile-image-wrapper">
+                <img className="profile-image" src={val.senderInfo.profileImage}/>
+              </a>
+              <p className="user-name">
+                {val.senderInfo.name}
               </p>
+            </>;
+          }
+
+          return (
+            <div className={`chat ${chatBy}`} key={val.logId}>
+              { userInfo }
+              <div className="inline-chat-list">
+                <p className="chat-body">
+                  {val.messageText}
+                </p>
+              </div>
             </div>
-          </div>
-        ))
+          );
+        })
       }
     </>
   );
