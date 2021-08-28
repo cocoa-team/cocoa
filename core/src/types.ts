@@ -8,6 +8,7 @@ export type CocoaUser = {
 export enum CocoaChatType {
   TEXT = 'text',
   PHOTO = 'photo',
+  EMOTICON = 'emoticon',
 }
 
 export interface CocoaMediaInfo {

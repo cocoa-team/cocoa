@@ -33,11 +33,16 @@ const ChatList = (props: {list: CocoaServerToClientMessage[]}) => {
             {val.messageText}
           </p>;
 
-          console.log(val.messageType);
           /* CocoaChatType.PHOTO */
           if (val.messageType as string === 'photo') {
             if (val.mediaInfo) {
               contents = <img className="image" src={val.mediaInfo?.imageURL} />;
+            }
+          }
+
+          if (val.messageType as string === 'emoticon') {
+            if (val.mediaInfo) {
+              contents = <img className="emotion" src={val.mediaInfo?.imageURL} />;
             }
           }
 

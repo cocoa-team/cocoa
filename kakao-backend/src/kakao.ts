@@ -6,6 +6,7 @@ import {
   TalkChannel,
   Long,
   KnownChatType,
+  EmoticonAttachment,
 } from 'node-kakao';
 
 import {
@@ -88,11 +89,33 @@ function chatHandleCallback(data: TalkChatData, channel: TalkChannel) {
 
   let mediaInfo: CocoaMediaInfo | undefined;
   let dataType = CocoaChatType.TEXT;
-  if (data.originalType === KnownChatType.PHOTO) {
-    dataType = CocoaChatType.PHOTO;
-    mediaInfo = {
-      imageURL: data.medias[0].url,
-    };
+
+  switch (data.originalType) {
+    case KnownChatType.PHOTO: {
+      dataType = CocoaChatType.PHOTO;
+      mediaInfo = {
+        imageURL: data.medias[0].url,
+      };
+      break;
+    }
+
+    case KnownChatType.STICKER:
+    case KnownChatType.STICKERGIF:
+    case KnownChatType.STICKERANI: {
+      const emoticon = data.attachment<EmoticonAttachment>();
+
+      if (emoticon) {
+        if (emoticon.path) {
+          dataType = CocoaChatType.EMOTICON;
+          mediaInfo = {
+            imageURL: `http://item-kr.talk.kakao.co.kr/dw/${emoticon.path}`,
+          };
+        }
+      }
+      break;
+    }
+
+    default: break;
   }
 
   sendChatToCocoaClients({
