@@ -1,15 +1,15 @@
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 
 import { CocoaChannelInfo } from '../../../core/src';
 import ChannelList from '../components/ChannelList';
+import { getChannelList } from '../util';
 
 export default () => {
   const [list, setList] = useState<CocoaChannelInfo[]>([]);
 
   useEffect(() => {
-    axios.get('/channels').then((response) => {
-      setList(response.data);
+    getChannelList().then((val) => {
+      setList(val);
     });
   }, []);
 
