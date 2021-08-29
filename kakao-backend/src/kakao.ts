@@ -5,10 +5,12 @@ import {
   TalkChatData,
   TalkChannel,
   Long,
+  KnownChatType,
+  EmoticonAttachment,
 } from 'node-kakao';
 
 import {
-  CocoaChannelInfo, CocoaChatData, CocoaChatType,
+  CocoaChannelInfo, CocoaChatData, CocoaChatType, CocoaMediaInfo,
 } from '../../core';
 
 import { KakaoLaunchInfo } from './types';
@@ -85,17 +87,49 @@ function chatHandleCallback(data: TalkChatData, channel: TalkChannel) {
 
   kakaoClientMessage(new Date(), `[${roomName}]${sender.nickname}': ' ${data.text}`);
 
+  let mediaInfo: CocoaMediaInfo | undefined;
+  let dataType = CocoaChatType.TEXT;
+
+  switch (data.originalType) {
+    case KnownChatType.PHOTO: {
+      dataType = CocoaChatType.PHOTO;
+      mediaInfo = {
+        imageURL: data.medias[0].url,
+      };
+      break;
+    }
+
+    case KnownChatType.STICKER:
+    case KnownChatType.STICKERGIF:
+    case KnownChatType.STICKERANI: {
+      const emoticon = data.attachment<EmoticonAttachment>();
+
+      if (emoticon) {
+        if (emoticon.path) {
+          dataType = CocoaChatType.EMOTICON;
+          mediaInfo = {
+            imageURL: `http://item-kr.talk.kakao.co.kr/dw/${emoticon.path}`,
+          };
+        }
+      }
+      break;
+    }
+
+    default: break;
+  }
+
   sendChatToCocoaClients({
     logId: data.chat.logId.toString(),
     channelId: channel.channelId.toString(),
     messageTime: new Date().getTime(),
     messageText: data.text,
-    messageType: CocoaChatType.TEXT,
+    messageType: dataType,
     senderInfo: {
       profileImage: sender.profileURL,
       userId: sender.userId.toString(),
       name: sender.nickname,
     },
+    mediaInfo,
   });
 }
 

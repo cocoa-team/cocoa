@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
 import { createWebSocket } from '../../util';
-import { CocoaServerToClientMessage } from '../../../../core/src/types';
+import { CocoaServerToClientMessage } from '../../../../core';
 import './style.css';
 
 type ChatProps = {
@@ -29,13 +29,28 @@ const ChatList = (props: {list: CocoaServerToClientMessage[]}) => {
             </>;
           }
 
+          let contents = <p className="chat-body">
+            {val.messageText}
+          </p>;
+
+          /* CocoaChatType.PHOTO */
+          if (val.messageType as string === 'photo') {
+            if (val.mediaInfo) {
+              contents = <img className="image" src={val.mediaInfo?.imageURL} />;
+            }
+          }
+
+          if (val.messageType as string === 'emoticon') {
+            if (val.mediaInfo) {
+              contents = <img className="emotion" src={val.mediaInfo?.imageURL} />;
+            }
+          }
+
           return (
             <div className={`chat ${chatBy}`} key={val.logId}>
               { userInfo }
               <div className="inline-chat-list">
-                <p className="chat-body">
-                  {val.messageText}
-                </p>
+                {contents}
               </div>
             </div>
           );

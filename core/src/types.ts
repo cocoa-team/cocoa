@@ -7,6 +7,12 @@ export type CocoaUser = {
 
 export enum CocoaChatType {
   TEXT = 'text',
+  PHOTO = 'photo',
+  EMOTICON = 'emoticon',
+}
+
+export interface CocoaMediaInfo {
+  imageURL?: string;
 }
 
 export interface CocoaChatData {
@@ -15,6 +21,7 @@ export interface CocoaChatData {
   messageTime: number;
   messageText: string;
   messageType: CocoaChatType;
+  mediaInfo?: CocoaMediaInfo;
 }
 
 export interface CocoaServerToClientMessage extends CocoaChatData {
